@@ -42,11 +42,11 @@
             vm.lexicoDataError = [];
             //LEXICO GRAFICO
             if (!lexicoGrafico()) {
-                //vm.logData = "Listos";
-                program();
+                vm.logData = "El analizador lexicográfico termino con éxito.";
+                //program();
             } else {
 
-                vm.logData = "Los siguientes tokens estan mal: " + vm.lexicoDataError;
+                vm.logData = "Tokens invalidos: " + vm.lexicoDataError;
             }
 
 
@@ -60,16 +60,21 @@
         function lexicoGrafico() {
             var errores = false;
             vm.tokens = ["program", "{", "}", "void", "if", "while", "iterate", "flip", "getCard", "putCard", "else", "isRed", "(", ")", "isBlack", "isHeart", "isClubs", "isDiamond", "isSpades", "isNotRed", "isNotBlack", "isNotHeart", "isNotClubs", "isNotDiamond", "isNotSpades", "<", ">", "<=", ">=", "==", "!=", "VALUE", "class"];
-
+            
+            //Cambia el enter por espacio
             vm.textArray = vm.textArea.replace(/\n/g, " ").split(" ");
             console.log(vm.textArray);
             //for loop del arreglo
             for (var i = 0; i <= vm.textArray.length - 1; i++) {
+                /*
                 console.log("PALABRA: " + vm.textArray[i]);
                 console.log("Contains Check: " + vm.tokens.includes(vm.textArray[i]));
                 console.log("Pure String check: " + pureString(vm.textArray[i]));
                 console.log("Number check: " + isNumber(vm.textArray[i]));
-                if (!(vm.tokens.includes(vm.textArray[i]) || pureString(vm.textArray[i]) || isNumber(vm.textArray[i]))) {
+                console.log("--------");
+                */
+                //entra si todos son False
+                if (!(vm.tokens.includes(vm.textArray[i]) || !pureString(vm.textArray[i]) || isNumber(vm.textArray[i]))) {
                     vm.lexicErrorCount++;
                     errores = true;
                     vm.lexicoDataError.push(vm.textArray[i]);
@@ -77,15 +82,20 @@
                 }
             }
 
-            console.log(errores);
+            //console.log(errores);
             return errores;
         }
 
         function pureString(data) {
-            return !/\d/.test(data);
+            //REVISA que contenga alugno de estos caracteres:  -!$#@%^&*_+|~ =`[]:";'<>?,./\ o que tenga una letra.
+            var special = /[-!$#@%^&*_+|~ =`\[\]:";'<>?,.\/\\]/.test(data);
+            //console.log("Simbol check: " + special);
+            var number = /\d/.test(data)
+            return special || number;
         }
 
         function isNumber(data) {
+            //Revisa que sea un Número
             return /^\d+$/.test(data);
         }
 
